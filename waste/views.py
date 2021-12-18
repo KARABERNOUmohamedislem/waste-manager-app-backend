@@ -20,6 +20,14 @@ class UUIDEncoder(json.JSONEncoder):
             # if the obj is uuid, we simply return the value of uuid
             return obj.hex
         return json.JSONEncoder.default(self, obj)
+
+
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, datetime):
+            return o.isoformat()
+
+        return json.JSONEncoder.default(self, o)
 # Create your views here.
 
 
@@ -244,3 +252,27 @@ def wasted_products_period(request):
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(["GET"])
+def wasted_product_period_per_day(request):
+    # try:
+    start_date = request.GET.get("start_date")
+    fin_date = request.GET.get("fin_date")
+    product = request.GET.get("product")
+    
+    result = Waste.objects.filter(product_id=product,
+                                  date__gte=start_date,
+                                  date__lte=fin_date)\
+        .values(
+        'date'
+    ).annotate(
+        total_waste=Sum('wasted_kilos')
+    ).order_by(
+        'date' 
+    )
+
+    result_json = json.dumps(
+        {"data": list(result)}, cls=UUIDEncoder, indent=4, sort_keys=True, default=str)
+    return HttpResponse(result_json, content_type="application/json")
+    # except:
+    #     return Response(status=status.HTTP_400_BAD_REQUEST)

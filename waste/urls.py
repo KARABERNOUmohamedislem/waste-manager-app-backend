@@ -9,7 +9,8 @@ from .views import (getProducts,
                     employee_wasted_products_month,
                     employee_wasted_products_day,
                     employee_wasted_products_period,
-                    wasted_products_period)
+                    wasted_products_period,
+                    wasted_product_period_per_day)
 
 urlpatterns = [
     path('products/', getProducts),
@@ -24,4 +25,6 @@ urlpatterns = [
     path('employee/wasted/products/day/', employee_wasted_products_day),
     path('employee/wasted/products/period/', employee_wasted_products_period),
     path('wasted/products/period/', wasted_products_period),
+    
+    path('wasted/product/period/days/', wasted_product_period_per_day) 
 ]
