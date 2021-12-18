@@ -23,7 +23,7 @@ class Waste(models.Model):
         to=Product, on_delete=models.CASCADE, null=True, blank=True)
     wasted_kilos = models.IntegerField(default=0)
     estimated_price = models.IntegerField(default=0)
-    date = models.DateField()
+    date = models.DateField(verbose_name="date")
 
 
 class Entries(models.Model):
